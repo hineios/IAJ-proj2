@@ -98,7 +98,20 @@ public class IAJMenuItems  {
             clusterGraph.gatewayDistanceTable[i] = row;
         }
 
-        Debug.Log("Distance table with: " + clusterGraph.gatewayDistanceTable.Length + " rows and " + clusterGraph.gatewayDistanceTable[0].entries.Length + " columns.");
+        //Debug.Log("Distance table with: " + clusterGraph.gatewayDistanceTable.Length + " rows and " + clusterGraph.gatewayDistanceTable[0].entries.Length + " columns.");
+        //string print = "[";
+        //for (int i = 0; i < clusterGraph.gatewayDistanceTable.Length; i++)
+        //{
+        //    print += "[";
+        //    for(int j= 0; j < clusterGraph.gatewayDistanceTable[i].entries.Length; j++)
+        //    {
+        //        print += clusterGraph.gatewayDistanceTable[i].entries[j].shortestDistance + ", ";
+        //    }
+        //    print += "]\n";
+        //}
+        //print += "]";
+        //Debug.Log(print);
+
         //create a new asset that will contain the ClusterGraph and save it to disk (DO NOT REMOVE THIS LINE)
         clusterGraph.SaveToAssetDatabase();
     }
