@@ -58,14 +58,47 @@ public class IAJMenuItems  {
         // Second stage of the algorithm, calculation of the Gateway table
 
         GlobalPath solution = null;
-        float cost;
+        //float cost;
         Gateway startGate;
         Gateway endGate;
 
         var pathfindingAlgorithm = new NodeArrayAStarPathFinding(navMesh, new EuclideanDistanceHeuristic());
 
-        //TODO implement the rest of the algorithm here, i.e. build the GatewayDistanceTable
+        clusterGraph.gatewayDistanceTable = new GatewayDistanceTableRow[clusterGraph.gateways.Count];
+        
+        for( int i = 0; i < clusterGraph.gateways.Count; i++)
+        {
+            var row = new GatewayDistanceTableRow();
+            row.entries = new GatewayDistanceTableEntry[clusterGraph.gateways.Count];
+            startGate = clusterGraph.gateways[i];
+            for (int j = 0; j < clusterGraph.gateways.Count; j++)
+            {
+                endGate = clusterGraph.gateways[j];
 
+                row.entries[j] = new GatewayDistanceTableEntry()
+                {
+                    startGatewayPosition = startGate.Localize(),
+                    endGatewayPosition = endGate.Localize()
+                };
+
+                if (i != j)
+                {
+                    pathfindingAlgorithm.InitializePathfindingSearch(startGate.Localize(), endGate.Localize());
+                    bool finished = pathfindingAlgorithm.Search(out solution);
+                    if (finished && solution != null)
+                        row.entries[j].shortestDistance = solution.Length;
+                    else
+                        row.entries[j].shortestDistance = float.MaxValue;
+                }
+                else
+                {
+                    row.entries[j].shortestDistance = 0.0f;
+                }
+            }
+            clusterGraph.gatewayDistanceTable[i] = row;
+        }
+
+        Debug.Log("Distance table with: " + clusterGraph.gatewayDistanceTable.Length + " rows and " + clusterGraph.gatewayDistanceTable[0].entries.Length + " columns.");
         //create a new asset that will contain the ClusterGraph and save it to disk (DO NOT REMOVE THIS LINE)
         clusterGraph.SaveToAssetDatabase();
     }
