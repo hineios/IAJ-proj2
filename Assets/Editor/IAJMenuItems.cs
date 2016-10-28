@@ -112,6 +112,26 @@ public class IAJMenuItems  {
         //print += "]";
         //Debug.Log(print);
 
+
+
+        //do not change this
+        var nodes = GetNodesHack(navMesh);
+
+        clusterGraph.nodesCluster = new Cluster[nodes.Count];
+        foreach(var n in nodes)
+        {
+            var pos = n.LocalPosition;
+            foreach(var c in clusterGraph.clusters)
+            {
+                if (pos.x >= c.min.x && pos.x <= c.max.x && pos.z >= c.min.z && pos.z <= c.max.z)
+                {
+                    clusterGraph.nodesCluster[n.NodeIndex] = c;
+                    break;
+                }
+            }
+        }
+
+
         //create a new asset that will contain the ClusterGraph and save it to disk (DO NOT REMOVE THIS LINE)
         clusterGraph.SaveToAssetDatabase();
     }

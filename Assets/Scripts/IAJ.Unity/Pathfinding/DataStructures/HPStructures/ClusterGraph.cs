@@ -11,6 +11,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
         public List<Cluster> clusters;
         public List<Gateway> gateways;
         public GatewayDistanceTableRow[] gatewayDistanceTable;
+        public Cluster[] nodesCluster;
 
         public ClusterGraph()
         {
@@ -20,13 +21,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
 
         public Cluster Quantize(NavigationGraphNode node)
         {
-            Vector3 pos = node.LocalPosition;
-            foreach(Cluster c in clusters)
-            {
-                if (pos.x >= c.min.x && pos.x <= c.max.x && pos.z >= c.min.z && pos.z <= c.max.z)
-                    return c;
-            }
-            return null;
+            return nodesCluster[node.NodeIndex];
         }
 
         public void SaveToAssetDatabase()
@@ -66,6 +61,12 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
                 {
                     AssetDatabase.AddObjectToAsset(tableEntry, assetPathAndName);
                 }
+            }
+
+            //save the clusters for each node
+            foreach(var c in this.nodesCluster)
+            {
+                AssetDatabase.AddObjectToAsset(c, assetPathAndName);
             }
 
             AssetDatabase.SaveAssets();
