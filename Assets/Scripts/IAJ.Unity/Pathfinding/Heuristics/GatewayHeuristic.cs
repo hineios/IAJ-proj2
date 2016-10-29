@@ -23,15 +23,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics
                 return EuclideanDistance(node.LocalPosition, goalNode.LocalPosition);
             else
             {
+                var startPos = node.LocalPosition;
+                var goalPos = goalNode.LocalPosition;
                 float min = float.MaxValue;
                 foreach(Gateway g1 in StartCluster.gateways)
                 {
                     foreach(Gateway g2 in GoalCluster.gateways)
                     {
                         float h = 
-                            EuclideanDistance(node.LocalPosition, g1.center) + 
+                            EuclideanDistance(startPos, g1.center) + 
                             ClusterGraph.gatewayDistanceTable[g1.id].entries[g2.id].shortestDistance + 
-                            EuclideanDistance(g2.center, goalNode.LocalPosition);
+                            EuclideanDistance(g2.center, goalPos);
                         if (h < min)
                             min = h;
                     }
