@@ -13,8 +13,7 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 		}
 
         public Path Path { get; set; }
-		// Used to get info on the total path offset.
-		// since the beginning of the global path to the end.
+		// Used to do a foward check for a new position.
         public float PathOffset { get; set; }
 
 		// The current param for the current local path
@@ -38,7 +37,7 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
             //don't forget to set all properties
             //arrive properties
 			this.CurrentParam = 0.0f;
-			this.PathOffset = 0.0f;
+			this.PathOffset = 0.3f;
 			this.MaxAcceleration = 15.0f;
 			this.currentPath = null;
         }
@@ -54,25 +53,26 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 				return base.GetMovement ();
 			}
 
-			// First time only.
+		/*	// First time only.
 			if (object.ReferenceEquals (null, this.currentPath)) {
 				int position = (int)Math.Truncate (this.CurrentParam);
 				// o line segment que ele vai percorrer
 				this.currentPath = (LineSegmentPath) this.globalPath.LocalPaths [position];
 				this.Target.position = this.currentPath.EndPosition;
-			}
+			} */
 
 			// Before we get a new param we need to save the old one to compare if nodes change.
 			float previous = this.CurrentParam;
 			this.CurrentParam = this.Path.GetParam (this.Character.position, this.CurrentParam);
-			this.PathOffset = this.CurrentParam;
 
+			this.Target.position = this.Path.GetPosition (this.CurrentParam + this.PathOffset);
+			/*
 			if (checkIfParamChanged (previous, this.CurrentParam)) {
 				int position = (int)Math.Truncate (this.CurrentParam);
 				// o line segment que ele vai percorrer
 				this.currentPath = (LineSegmentPath) this.globalPath.LocalPaths [position];
 				this.Target.position = this.currentPath.EndPosition;
-			}
+			} */
 
 			return base.GetMovement ();
         }
