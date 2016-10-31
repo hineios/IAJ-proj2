@@ -18,21 +18,21 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics
             //for now just returns the euclidean distance
             Cluster StartCluster = ClusterGraph.Quantize(node);
             Cluster GoalCluster = ClusterGraph.Quantize(goalNode);
-
-            if (StartCluster.Equals(GoalCluster))
+            if (object.ReferenceEquals(StartCluster, GoalCluster) || object.ReferenceEquals(null, StartCluster) || object.ReferenceEquals(null, GoalCluster))
+            {
                 return EuclideanDistance(node.LocalPosition, goalNode.LocalPosition);
-            else
+            }else
             {
                 var startPos = node.LocalPosition;
                 var goalPos = goalNode.LocalPosition;
                 float min = float.MaxValue;
-                foreach(Gateway g1 in StartCluster.gateways)
+                foreach (Gateway g1 in StartCluster.gateways)
                 {
-                    foreach(Gateway g2 in GoalCluster.gateways)
+                    foreach (Gateway g2 in GoalCluster.gateways)
                     {
-                        float h = 
-                            EuclideanDistance(startPos, g1.center) + 
-                            ClusterGraph.gatewayDistanceTable[g1.id].entries[g2.id].shortestDistance + 
+                        float h =
+                            EuclideanDistance(startPos, g1.center) +
+                            ClusterGraph.gatewayDistanceTable[g1.id].entries[g2.id].shortestDistance +
                             EuclideanDistance(g2.center, goalPos);
                         if (h < min)
                             min = h;
