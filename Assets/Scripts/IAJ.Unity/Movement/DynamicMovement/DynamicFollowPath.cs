@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.IAJ.Unity.Pathfinding.Path;
 using System;
 using Assets.Scripts.IAJ.Unity.Utils;
+using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 {
@@ -44,12 +45,16 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 
         public override MovementOutput GetMovement()
         {
+			// We check if we reached the end of the destiny here
+			// if we do then put all velocities at 0 and return base method.
 			if (this.Path.PathEnd (PathOffset)) {
 				this.MaxAcceleration = 0.0f;
-				return this.EmptyMovementOutput;
+				this.MovingTarget.velocity = Vector3.zero;
+				this.Character.velocity = Vector3.zero;
+				return base.GetMovement ();
 			}
-			// Nao sei se a ordem esta correcta da chamada das funçoes.
 
+			// First time only.
 			if (object.ReferenceEquals (null, this.currentPath)) {
 				int position = (int)Math.Truncate (this.CurrentParam);
 				// o line segment que ele vai percorrer
@@ -57,8 +62,7 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 				this.Target.position = this.currentPath.EndPosition;
 			}
 
-			var newPosition = this.Path.GetPosition (this.CurrentParam);
-
+			// Before we get a new param we need to save the old one to compare if nodes change.
 			float previous = this.CurrentParam;
 			this.CurrentParam = this.Path.GetParam (this.Character.position, this.CurrentParam);
 			this.PathOffset = this.CurrentParam;
@@ -73,7 +77,11 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 			return base.GetMovement ();
         }
 
-
+		/**
+		 * Since we need to know when the currentParam changes its localNode
+		 * we check if the previous param and the new param match.
+		 * We only compare the integer part of the param. 
+		 **/
 		private bool checkIfParamChanged(float lastParam, float currentParam)
 		{
 			bool result = false;
