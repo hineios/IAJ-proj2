@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics
             //for now just returns the euclidean distance
             Cluster StartCluster = ClusterGraph.Quantize(node);
             Cluster GoalCluster = ClusterGraph.Quantize(goalNode);
-            if (object.ReferenceEquals(StartCluster, GoalCluster) || object.ReferenceEquals(null, StartCluster) || object.ReferenceEquals(null, GoalCluster))
+            if (StartCluster.Equals(GoalCluster) || object.ReferenceEquals(null, StartCluster) || object.ReferenceEquals(null, GoalCluster))
             {
                 return EuclideanDistance(node.LocalPosition, goalNode.LocalPosition);
             }else
