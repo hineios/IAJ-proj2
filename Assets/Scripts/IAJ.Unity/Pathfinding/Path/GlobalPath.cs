@@ -54,12 +54,15 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
 
         public override bool PathEnd(float param)
         {
+			bool result = false;
 			int position = (int) Math.Truncate (param);
 			int count = this.LocalPaths.Count;
-			if (position >= count)
+			if (position < count)
+				result = false;
+			else
 				return true;
 			LocalPath path = this.LocalPaths [position];
-			return path.PathEnd(param);
+			return result && path.PathEnd(param);
         }
     }
 }

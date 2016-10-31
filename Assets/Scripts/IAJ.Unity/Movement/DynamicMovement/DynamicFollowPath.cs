@@ -20,7 +20,11 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 		// this one is reseted after we finish a local path
         public float CurrentParam { get; set; }
 
+		public GlobalPath globalPath { get; set; }
+
         private MovementOutput EmptyMovementOutput { get; set; }
+
+		private LineSegmentPath currentPath { get; set; }
 
 
 		public DynamicFollowPath(KinematicData character, Path path)
@@ -28,29 +32,56 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
             this.Target = new KinematicData();
             this.Character = character;
             this.Path = path;
+			this.globalPath = (GlobalPath) path;
             this.EmptyMovementOutput = new MovementOutput();
             //don't forget to set all properties
             //arrive properties
-			this.CurrentParam = this.Path.GetParam(this.Character.position, 0.0f);
+			this.CurrentParam = 0.0f;
 			this.PathOffset = 0.0f;
 			this.MaxAcceleration = 15.0f;
+			this.currentPath = null;
         }
 
         public override MovementOutput GetMovement()
         {
 			if (this.Path.PathEnd (PathOffset)) {
-				this.MovingTarget.velocity = MathHelper.ConvertOrientationToVector(0.0f);
+				this.MaxAcceleration = 0.0f;
 				return this.EmptyMovementOutput;
 			}
 			// Nao sei se a ordem esta correcta da chamada das funçoes.
 
+			if (object.ReferenceEquals (null, this.currentPath)) {
+				int position = (int)Math.Truncate (this.CurrentParam);
+				// o line segment que ele vai percorrer
+				this.currentPath = (LineSegmentPath) this.globalPath.LocalPaths [position];
+				this.Target.position = this.currentPath.EndPosition;
+			}
+
 			var newPosition = this.Path.GetPosition (this.CurrentParam);
 
-			this.Target.position = newPosition;
-			this.CurrentParam = this.Path.GetParam (newPosition, this.CurrentParam);
+			float previous = this.CurrentParam;
+			this.CurrentParam = this.Path.GetParam (this.Character.position, this.CurrentParam);
 			this.PathOffset = this.CurrentParam;
+
+			if (checkIfParamChanged (previous, this.CurrentParam)) {
+				int position = (int)Math.Truncate (this.CurrentParam);
+				// o line segment que ele vai percorrer
+				this.currentPath = (LineSegmentPath) this.globalPath.LocalPaths [position];
+				this.Target.position = this.currentPath.EndPosition;
+			}
 
 			return base.GetMovement ();
         }
+
+
+		private bool checkIfParamChanged(float lastParam, float currentParam)
+		{
+			bool result = false;
+			int lastParamInt = (int)Math.Truncate (lastParam);
+			int currentParamInt = (int)Math.Truncate (currentParam);
+			if (lastParamInt != currentParamInt)
+				result = true;
+			return result;
+		}
     }
 }
