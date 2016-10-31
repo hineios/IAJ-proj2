@@ -30,7 +30,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
         public override float GetParam(Vector3 position, float lastParam)
         {
 			float param = (float) Math.Truncate (lastParam);
-			// Aqui tenho muitas duvidas que isto esteja bem, porque parece me muito estupido eu ter de chamar esta funçao com 2 parametros iguais
 			return param + MathHelper.closestParamInLineSegmentToPoint (this.StartPosition, this.EndPosition, position);
         }
     }

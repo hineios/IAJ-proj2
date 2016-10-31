@@ -24,17 +24,10 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 
 
 
-		public DynamicFollowPath(KinematicData character, Path path)
+		public DynamicFollowPath()
         {
-            this.Target = new KinematicData();
-            this.Character = character;
-            this.Path = path;
-            this.EmptyMovementOutput = new MovementOutput();
-            //don't forget to set all properties
-            //arrive properties
-			this.CurrentParam = 0.0f;
-			this.PathOffset = 0.3f;
-			this.MaxAcceleration = 15.0f;
+			// Its equal every time so we create it here.
+			this.EmptyMovementOutput = new MovementOutput();
         }
 
         public override MovementOutput GetMovement()
@@ -55,5 +48,17 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
 
 			return base.GetMovement ();
         }
+
+		public void prepare(KinematicData character, Path path)
+		{
+			this.Target = new KinematicData();
+			this.Character = character;
+			this.Path = path;
+			//don't forget to set all properties
+			//arrive properties
+			this.CurrentParam = 0.0f;
+			this.PathOffset = 1.0f;
+			this.MaxAcceleration = 15.0f;
+		}
     }
 }

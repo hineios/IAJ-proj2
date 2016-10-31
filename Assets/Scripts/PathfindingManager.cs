@@ -25,6 +25,7 @@ public class PathfindingManager : MonoBehaviour {
 
     private DynamicCharacter character;
     private bool draw;
+	private DynamicFollowPath path;
 
     //properties
     private AStarPathfinding AStarPathFinding { get;  set; }
@@ -38,6 +39,7 @@ public class PathfindingManager : MonoBehaviour {
         this.navMesh = NavigationManager.Instance.NavMeshGraphs[0];
         this.AStarPathFinding = new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph));
         this.AStarPathFinding.NodesPerSearch = 100;
+		this.path = new DynamicFollowPath ();
 	}
 	
 	// Update is called once per frame
@@ -73,7 +75,9 @@ public class PathfindingManager : MonoBehaviour {
 	            this.startPosition = this.character.KinematicData.position;
 	            this.currentSmoothedSolution = StringPullingPathSmoothing.SmoothPath(this.character.KinematicData,this.currentSolution);
                 this.currentSmoothedSolution.CalculateLocalPathsFromPathPositions(this.character.KinematicData.position);
-                this.character.Movement = new DynamicFollowPath(this.character.KinematicData, this.currentSmoothedSolution);
+				// Prepare movement class 
+				this.path.prepare (this.character.KinematicData, this.currentSmoothedSolution);
+				this.character.Movement = this.path;
 
 	        }
 	    }
