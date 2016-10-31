@@ -17,7 +17,7 @@
         {
             this.MovingTarget = new KinematicData();
             MaxSpeed = 20.0f;
-            StopRadius = 3.5f;
+            StopRadius = 0.1f;
             SlowRadius = 5.0f;
         }
 

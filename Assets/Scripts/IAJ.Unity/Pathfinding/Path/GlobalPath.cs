@@ -2,6 +2,7 @@
 using Assets.Scripts.IAJ.Unity.Utils;
 using RAIN.Navigation.Graph;
 using UnityEngine;
+using System;
 
 namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
 {
@@ -37,20 +38,28 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
 
         public override float GetParam(Vector3 position, float previousParam)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			float postion = (float) Math.Truncate (previousParam);
+			int pos = (int) postion;
+			LocalPath currentPath = this.LocalPaths [pos];
+			return currentPath.GetParam (position, previousParam);
         }
 
         public override Vector3 GetPosition(float param)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			float postionInt = (float) Math.Truncate (param);
+			int pos = (int) postionInt;
+			LocalPath currentPath = this.LocalPaths [pos];
+			return currentPath.GetPosition (param);
         }
 
         public override bool PathEnd(float param)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			int position = (int) Math.Truncate (param);
+			int count = this.LocalPaths.Count;
+			if (position >= count)
+				return true;
+			LocalPath path = this.LocalPaths [position];
+			return path.PathEnd(param);
         }
     }
 }

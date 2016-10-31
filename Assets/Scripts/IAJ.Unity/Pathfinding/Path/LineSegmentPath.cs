@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.IAJ.Unity.Utils;
 using UnityEngine;
+using System;
 
 namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
 {
@@ -15,20 +16,22 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
 
         public override Vector3 GetPosition(float param)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			float percentage = param - (float) Math.Truncate (param);
+			Vector3 result = Vector3.Lerp (this.StartPosition, this.EndPosition, percentage);
+			return Vector3.Lerp (this.StartPosition, this.EndPosition, percentage);
         }
 
         public override bool PathEnd(float param)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			float position = (float) Math.Truncate (param);
+			return param - position > 0.95;
         }
 
         public override float GetParam(Vector3 position, float lastParam)
         {
-            //TODO implement
-            throw new System.NotImplementedException();
+			float param = (float) Math.Truncate (lastParam);
+			// Aqui tenho muitas duvidas que isto esteja bem, porque parece me muito estupido eu ter de chamar esta funçao com 2 parametros iguais
+			return param + MathHelper.closestParamInLineSegmentToPoint (this.StartPosition, this.EndPosition, this.EndPosition);
         }
     }
 }
