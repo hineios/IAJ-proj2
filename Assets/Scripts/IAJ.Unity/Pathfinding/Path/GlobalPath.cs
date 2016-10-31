@@ -56,7 +56,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path
         {
 			bool result = false;
 			int position = (int) Math.Truncate (param);
-			int count = this.LocalPaths.Count;
+			int count = this.LocalPaths.Count - 1;
 			if (position < count)
 				result = false;
 			else
